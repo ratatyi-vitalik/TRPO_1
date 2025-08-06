@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="ru">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Холодильник {{ prod.model }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='product.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='un.css') }}" media="screen">
+    <link id="u-theme-google-font" rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Главная">
+</head>
+
+
+<body>
+
+<header>
+    <div class="head">
+        <a class="logo" href="/">Xolodinik.BY</a>
+        <p class="logo-text">Интернет магазин<br>холодильников</p>
+        <a href="/register" class="btn btn-1">Регистрация </a>
+        <a href="/login" class="btn btn-2">Войти </a>
+    </div>
+</header>
+
+<section class="u-clearfix u-section-1" id="block-3" style="max-width: 2400px;">
+    <div class="u-clearfix u-sheet-1">
+        <h3 class="title" style="background-color: #FFFFFF; border: none;">Холодильник {{ prod.model }}</h3>
+        <div class="product-card-box">
+            <img class="u-image u-image-default u-image-1" src="{{ url_for('static', filename=prod.image_path) }}">
+            <div class="group">
+                <h3 class="text">{{ prod.description }}</h3>
+                <div class="product-props-up">
+                    <div class="label">Ширина:</div>
+                    <div class="value">{{ prod.width }} мм</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Глубина:</div>
+                    <div class="value">{{ prod.depth }} мм</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Высота:</div>
+                    <div class="value">{{ prod.height }} мм</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Вес:</div>
+                    <div class="value">{{ prod.weight }} кг</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Общий объем:</div>
+                    <div class="value">{{ prod.volume }} л</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Система охлаждения:</div>
+                    <div class="value">{{ prod.colling }}</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Цвет корпуса:</div>
+                    <div class="value">{{ prod.color }}</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Срок службы:</div>
+                    <div class="value">{{ prod.service }}</div>
+                </div>
+                <div class="product-props-up">
+                    <div class="label">Страна производства:</div>
+                    <div class="value">{{ prod.country }}</div>
+                </div>
+            </div>
+            <div class="block_btns_info">
+                <div class="price-text">Цена:</div>
+                <div class="price">{{ prod.price }} BYN</div>
+                <hr>
+                <div class="product_card_buttons">
+                    <button class="btn btn-1">Купить</button>
+                    <hr>
+                    <div class="text-2">Позвоните нам:</div>
+                    <div class="text-2">+375 (33) 691-11-44</div>
+                </div>
+                <hr>
+                <div class="text-2" style="color: #111111; font-size: 1.5rem;">Гарантия:</div>
+                <div class="text-2">36 месяцев</div>
+            </div>
+        </div>
+        <hr style="margin-bottom: 30px;">
+        <h3 class="title">Характеристики</h3>
+        <div class="container">
+            <div class="container-1">
+                <div class="product_card">
+                    <div class="product-props-group">
+                        <h3 class="title-1">Габариты</h3>
+
+                        <div class="product-props">
+                            <div class="label">Ширина:</div>
+                            <div class="value">{{ prod.width }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Глубина:</div>
+                            <div class="value">{{ prod.depth }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Высота:</div>
+                            <div class="value">{{ prod.height }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Вес:</div>
+                            <div class="value">{{ prod.weight }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Общий объем:</div>
+                            <div class="value">{{ prod.volume }}</div>
+                        </div>
+
+                    </div>
+                    <div class="product-props-group">
+                        <h3 class="title-1">Основные</h3>
+
+                        <div class="product-props">
+                            <div class="label">Категория холодильного прибора:</div>
+                            <div class="value">{{ prod.category }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Система охлаждения:</div>
+                            <div class="value">{{ prod.colling }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Цвет корпуса:</div>
+                            <div class="value">{{ prod.color }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Класс энергоэффективности:</div>
+                            <div class="value">{{ prod.energy_efficiency }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Количество компрессоров:</div>
+                            <div class="value">{{ prod.compressors }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Уровень шума:</div>
+                            <div class="value">{{ prod.noise }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Тип ручки:</div>
+                            <div class="value">{{ prod.handle }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Полная гарантия (учитывая информацию, изложенную в РЭ):</div>
+                            <div class="value">{{ prod.guaranty }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Расположение блока управления:</div>
+                            <div class="value">{{ prod.control_unit }}</div>
+                        </div>
+
+                    </div>
+                    <div class="product-props-group">
+                        <h3 class="title-1">Общие</h3>
+
+                        <div class="product-props">
+                            <div class="label">Номинальная потребляемая мощность:</div>
+                            <div class="value">{{ prod.power }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Количество камер:</div>
+                            <div class="value">{{ prod.chambers }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Количество дверей:</div>
+                            <div class="value">{{ prod.doors }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Полный полезный объeм:</div>
+                            <div class="value">{{ prod.useful_volume }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Полезный объем холодильной камеры:</div>
+                            <div class="value">{{ prod.useful_volume_ref }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Полезный объем морозильной камеры:</div>
+                            <div class="value">{{ prod.useful_volume_freezer }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Номинальное напряжение и частота:</div>
+                            <div class="value">{{ prod.voltage_frequency }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Годовое энергопотребление:</div>
+                            <div class="value">{{ prod.energy_consumption }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Хладагент:</div>
+                            <div class="value">{{ prod.coolant }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Серия:</div>
+                            <div class="value">{{ prod.series }}</div>
+                        </div>
+
+                    </div>
+                    <div class="product-props-group">
+                        <h3 class="title-1">Холодильная камера</h3>
+
+                        <div class="product-props">
+                            <div class="label">Средняя температура хранения свежих продуктов:</div>
+                            <div class="value">{{ prod.temperature }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Автоматическая система оттаивания холодильной камеры:</div>
+                            <div class="value">{{ prod.defrosting_system }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Общее количество полок:</div>
+                            <div class="value">{{ prod.shelves }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Количество барьеров на двери:</div>
+                            <div class="value">{{ prod.barriers }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Корзина для овощей или фруктов:</div>
+                            <div class="value">{{ prod.baskets }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Вкладыши для яиц:</div>
+                            <div class="value">{{ prod.inserts }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Ограничитель для бутылок:</div>
+                            <div class="value">{{ prod.stoppers }}</div>
+                        </div>
+
+                    </div>
+                    <div class="product-props-group">
+                        <h3 class="title-1">Морозильная камера:</h3>
+
+                        <div class="product-props">
+                            <div class="label">Температура хранения замороженных продуктов в морозильной камере:</div>
+                            <div class="value">{{ prod.freezer_temp }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Мощность замораживания при температуре окр. среды +25°С:</div>
+                            <div class="value">{{ prod.freezing_capacity }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Количество отделений в морозильной камере:</div>
+                            <div class="value">{{ prod.freezer_parts }}</div>
+                        </div>
+
+
+                    </div>
+                    <div class="product-props-group">
+                        <h3 class="title-1">Упаковка</h3>
+
+                        <div class="product-props">
+                            <div class="label">Размер без упаковки (ВхШxГ):</div>
+                            <div class="value">{{ prod.size_without }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Размер в упаковке (ВхШxГ):</div>
+                            <div class="value">{{ prod.size_with }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Вес в упаковке:</div>
+                            <div class="value">{{ prod.weight_without }}</div>
+                        </div>
+
+                        <div class="product-props">
+                            <div class="label">Вес без упаковки:</div>
+                            <div class="value">{{ prod.weight_with }}</div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="review-container" style="max-width: 100%;">
+            <div>
+                <div>
+                    <div class="review">
+                        <p class="review-text-1">Виталик</p>
+                        <div class="rating-container">
+                            <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 39px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 71px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 103px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 135px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="review-text">Вообще крпзлуклщрбукзъщпубьлпзщвкпрьукз=щпукеьлзрщукьуцз=щаубькрзщук</p>
+                        <p class="review-data">29.01.1999</p>
+                    </div>
+                </div>
+                <div class="review-add-container">
+                    <form name="form" method="post">
+                            <input id="review" name="review" required autocomplete="off">
+                        <button class="btn-submit" type="submit">Добавить отзыв</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer></footer>
+
+</body>
+</html>

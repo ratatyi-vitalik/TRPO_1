@@ -1,0 +1,111 @@
+header .head {
+    box-sizing: border-box;
+    position: relative;
+    margin: 0 auto;
+    min-height: 109px;
+}
+
+header .btn-1 {
+    margin: -58px 16px 0 auto !important;
+    padding: 8px 32px 8px 31px !important;
+}
+
+header .btn-2 {
+    color: #ffffff !important;
+    border-color: transparent !important;
+    margin: -40px 199px 0 auto !important;
+    padding: 9px 33px 9px 32px !important;
+    border-width: 0 !important;
+    background-color: #77aad9 !important;
+}
+
+section {
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    background-image: none;
+}
+
+header {
+    margin: 0 10px;
+    min-height: 109px;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    unicode-bidi: isolate;
+}
+
+footer {
+    min-height: 120px;
+    display: block;
+    position: relative;
+    text-align: center;
+    color: #ffffff;
+    background-color: #333333;
+    background-image: none;
+}
+
+html {
+    text-decoration: none;
+    -webkit-locale: "ru";
+    box-sizing: border-box;
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 16px;
+}
+
+header .logo {
+    padding: 0;
+    display: table;
+    align-self: flex-start;
+    word-wrap: break-word;
+    position: relative;
+    color: #77aad9 !important;
+    line-height: 1.6;
+    font-family: Roboto, sans-serif !important;
+    font-size: 3rem;
+    font-weight: 700;
+    height: 48px;
+    pointer-events: initial;
+}
+
+header .logo-text {
+    display: table;
+    align-self: flex-start;
+    width: fit-content;
+    word-wrap: break-word;
+    position: relative;
+    color: #858e99 !important;
+    font-family: Roboto, sans-serif !important;
+    font-weight: 400;
+    font-size: 0.875rem;
+    margin: -39px auto 0 275px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn {
+    box-sizing: border-box;
+    display: table;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    align-self: flex-start;
+    transition-property: background-color, color, border-color;
+    border-radius: 6px 6px 6px 6px;
+    line-height: 1.4;
+    border-color: #77aad9;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    border-style: solid;
+    margin: 29px auto 0 25px;
+    padding: 8px 33px;
+    border-width: 1px;
+    background-color: #ffffff;
+    color: #77aad9;
+}
