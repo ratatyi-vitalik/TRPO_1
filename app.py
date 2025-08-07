@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.secret_key = os.urandom(15)
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
@@ -63,7 +64,7 @@ class Prod(db.Model):
     image_path = db.Column(db.String(50), nullable=False, unique=True)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True, nullable=False)
     phone_number = db.Column(db.String(13), unique=True, nullable=False)
@@ -148,14 +149,23 @@ def register():
     if request.method == 'POST':
         hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
         user = User(login=request.form['login'], phone_number=request.form['phone_number'], password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        return redirect("/login")
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return redirect("/login")
+        except:
+            return "Ошибка"
     return render_template('register.html')
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST", "GET"])
 def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(login=request.form["login"]).first()
+        if user and bcrypt.check_password_hash(user.password, request.form["password"]):
+            login_user(user)
+            flash(f"Поздравляем {request.form['login']} Вы успешно авторизованы!", "success")
+            return redirect("/")
     return render_template("login.html")
 
 
