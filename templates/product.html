@@ -15,14 +15,18 @@
 
 <body>
 
-<header>
-    <div class="head">
+  <header>
+      <div class="head">
         <a class="logo" href="/">Xolodinik.BY</a>
         <p class="logo-text">Интернет магазин<br>холодильников</p>
-        <a href="/register" class="btn btn-1">Регистрация </a>
-        <a href="/login" class="btn btn-2">Войти </a>
-    </div>
-</header>
+        {% if current_user.is_active %}
+          <a href="/cub" style="margin-right: 20px !important;" class="btn btn-2">Личный кабинет</a>
+        {% else %}
+          <a href="/register" class="btn btn-1">Регистрация</a>
+          <a href="/login" class="btn btn-2">Войти</a>
+        {% endif %}
+      </div>
+  </header>
 
 <section class="u-clearfix u-section-1" id="block-3" style="max-width: 2400px;">
     <div class="u-clearfix u-sheet-1">

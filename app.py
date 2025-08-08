@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_user, UserMixin
+from flask_login import LoginManager, login_user, UserMixin, logout_user
 import os
 
 app = Flask(__name__)
@@ -82,68 +82,6 @@ def index():
     return render_template("index.html", prods=prods)
 
 
-@app.route("/panel", methods=["POST", "GET"])
-def panel():
-    if request.method == "POST":
-        file = request.files['image']
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        prod = Prod(model=request.form["model"],
-                    producer=request.form["producer"],
-                    price=request.form["price"],
-                    width=request.form["width"],
-                    depth=request.form["depth"],
-                    height=request.form["height"],
-                    weight=request.form["weight"],
-                    volume=request.form["volume"],
-                    service=request.form["service"],
-                    country=request.form["country"],
-                    category=request.form["category"],
-                    colling=request.form["colling"],
-                    color=request.form["color"],
-                    energy_efficiency=request.form["energy-efficiency"],
-                    compressors=request.form["compressors"],
-                    noise=request.form["noise"],
-                    handle=request.form["handle"],
-                    guaranty=request.form["guaranty"],
-                    control_unit=request.form["control-unit"],
-                    power=request.form["power"],
-                    chambers=request.form["chambers"],
-                    doors=request.form["doors"],
-                    useful_volume=request.form["useful-volume"],
-                    useful_volume_ref=request.form["useful-volume-ref"],
-                    useful_volume_freezer=request.form["useful-volume-freezer"],
-                    voltage_frequency=request.form["voltage-frequency"],
-                    energy_consumption=request.form["energy-consumption"],
-                    coolant=request.form["coolant"],
-                    series=request.form["series"],
-                    temperature=request.form["temperature"],
-                    defrosting_system=request.form["defrosting-system"],
-                    shelves=request.form["shelves"],
-                    barriers=request.form["barriers"],
-                    baskets=request.form["baskets"],
-                    inserts=request.form["inserts"],
-                    stoppers=request.form["stoppers"],
-                    freezer_temp=request.form["freezer-temp"],
-                    freezing_capacity=request.form["freezing-capacity"],
-                    freezer_parts=request.form["freezer-parts"],
-                    size_without=request.form["size-without"],
-                    size_with=request.form["size-with"],
-                    weight_without=request.form["weight-without"],
-                    weight_with=request.form["weight-with"],
-                    description=request.form["description"],
-                    image_path="/uploads/"+filename
-                    )
-        try:
-            db.session.add(prod)
-            db.session.commit()
-            return redirect("/panel")
-        except:
-            return "Ошибка"
-    else:
-        return render_template("panel.html")
-
-
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == 'POST':
@@ -163,10 +101,23 @@ def login():
     if request.method == 'POST':
         user = User.query.filter_by(login=request.form["login"]).first()
         if user and bcrypt.check_password_hash(user.password, request.form["password"]):
-            login_user(user)
-            flash(f"Поздравляем {request.form['login']} Вы успешно авторизованы!", "success")
+            if request.form["remember"] == "on":
+                login_user(user, remember=True)
+            else:
+                login_user(user)
             return redirect("/")
     return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@app.route("/cub")
+def cub():
+    return render_template("cub.html")
 
 
 @app.route("/product")
@@ -177,6 +128,78 @@ def product():
         if prod:
             return render_template("product.html", prod=prod)
     return "404"
+
+
+@app.route("/panel", methods=["POST", "GET"])
+def panel():
+    if request.method == "POST":
+        if request.form["button"] == "create_product":
+            file = request.files['image']
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            prod = Prod(model=request.form["model"],
+                        producer=request.form["producer"],
+                        price=request.form["price"],
+                        width=request.form["width"],
+                        depth=request.form["depth"],
+                        height=request.form["height"],
+                        weight=request.form["weight"],
+                        volume=request.form["volume"],
+                        service=request.form["service"],
+                        country=request.form["country"],
+                        category=request.form["category"],
+                        colling=request.form["colling"],
+                        color=request.form["color"],
+                        energy_efficiency=request.form["energy-efficiency"],
+                        compressors=request.form["compressors"],
+                        noise=request.form["noise"],
+                        handle=request.form["handle"],
+                        guaranty=request.form["guaranty"],
+                        control_unit=request.form["control-unit"],
+                        power=request.form["power"],
+                        chambers=request.form["chambers"],
+                        doors=request.form["doors"],
+                        useful_volume=request.form["useful-volume"],
+                        useful_volume_ref=request.form["useful-volume-ref"],
+                        useful_volume_freezer=request.form["useful-volume-freezer"],
+                        voltage_frequency=request.form["voltage-frequency"],
+                        energy_consumption=request.form["energy-consumption"],
+                        coolant=request.form["coolant"],
+                        series=request.form["series"],
+                        temperature=request.form["temperature"],
+                        defrosting_system=request.form["defrosting-system"],
+                        shelves=request.form["shelves"],
+                        barriers=request.form["barriers"],
+                        baskets=request.form["baskets"],
+                        inserts=request.form["inserts"],
+                        stoppers=request.form["stoppers"],
+                        freezer_temp=request.form["freezer-temp"],
+                        freezing_capacity=request.form["freezing-capacity"],
+                        freezer_parts=request.form["freezer-parts"],
+                        size_without=request.form["size-without"],
+                        size_with=request.form["size-with"],
+                        weight_without=request.form["weight-without"],
+                        weight_with=request.form["weight-with"],
+                        description=request.form["description"],
+                        image_path="/uploads/"+filename
+                        )
+            try:
+                db.session.add(prod)
+                db.session.commit()
+                return redirect("/panel")
+            except:
+                return "Ошибка"
+        elif request.form["button"] == "delete":
+            prod = Prod.query.get(request.form["product"])
+            try:
+                db.session.delete(prod)
+                db.session.commit()
+                return redirect("/panel")
+            except:
+                return "Ошибка удаления из базы данных"
+    else:
+        prods = Prod.query.all()
+        return render_template("panel.html", prods=prods)
 
 
 if __name__ == "__main__":
