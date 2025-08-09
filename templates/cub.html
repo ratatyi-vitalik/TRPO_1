@@ -4,8 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Личный кабинет</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='product.css') }}" media="screen">
     <link rel="stylesheet" href="{{ url_for('static', filename='un.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='panel.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cub.css') }}" media="screen">
     <link id="u-theme-google-font" rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <meta name="theme-color" content="#478ac9">
@@ -17,12 +18,45 @@
       <div class="head">
         <a class="logo" href="/">Xolodinik.BY</a>
         <p class="logo-text">Интернет магазин<br>холодильников</p>
+        <a href="/logout" class="btn btn-2" style="margin-right: 30px !important;">Выйти из аккаунта</a>
       </div>
   </header>
 
-<div>
-    <a href="/logout" class="btn btn-2">Выйти из аккаунта</a>
-</div>
+  <section style="display: grid; place-items: center; min-height: 830px;">
+      <div>
+        <div class="border-1">
+          <div class="user-data">
+            <p class="text-1">Ваш логин</p>
+            <div class="login-cont">
+                <p class="text-1">{{ current_user.login }}</p>
+            </div>
+              <form class="form-1" name="form" method="post" style="padding: 0;">
+                        <div class="container-input">
+                            <label for="old_password">Старый пароль</label>
+                            <input type="password" id="old_password" name="old_password" class="input" required autocomplete="off">
+                        </div>
+                        <div class="container-input">
+                            <label for="new_password">Новый пароль</label>
+                            <input type="password" id="new_password" name="new_password" class="input" required autocomplete="off">
+                        </div>
+                        <button type="submit" name="user_id" value="{{ current_user.id }}">Изменить пароль</button>
+                    </form>
+          </div>
+        </div>
+        <div class="orders-cont border-1">
+          <div class="order-cont-1">
+            <div class="order border-1">
+              <div class="order-cont-1">
+                <p class="text-1">Товар</p>
+                <p class="text-2">Дата </p>
+                <p class="text-1">Цена:</p>
+                <p class="text-1">Отзыв:</p>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+    </section>
 
 <footer></footer>
 

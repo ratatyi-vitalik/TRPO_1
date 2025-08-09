@@ -115,8 +115,15 @@ def logout():
     return redirect("/")
 
 
-@app.route("/cub")
+@app.route("/cub", methods=["POST", "GET"])
 def cub():
+    if request.method == 'POST':
+        user = User.query.get(request.form["user_id"])
+        if user and bcrypt.check_password_hash(user.password, request.form["old_password"]):
+            user.password = bcrypt.generate_password_hash(request.form['new_password']).decode('utf-8')
+            db.session.commit()
+            flash("Пароль успешно изменён!")
+        return redirect("/")
     return render_template("cub.html")
 
 
