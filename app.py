@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_user, UserMixin, logout_user
+from flask_login import LoginManager, login_user, UserMixin, logout_user, login_required, current_user
 import os
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ app.secret_key = os.urandom(15)
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
+login_manager.login_view = 'login'
 
 
 class Prod(db.Model):
@@ -69,6 +70,20 @@ class User(db.Model, UserMixin):
     login = db.Column(db.String(20), unique=True, nullable=False)
     phone_number = db.Column(db.String(13), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(20))
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_phone_number = db.Column(db.String(20), nullable=False)
+    user_email = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="не принят")
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref='orders')
+
+    prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
+    prod = db.relationship('Prod', backref='orders')
 
 
 @login_manager.user_loader
@@ -99,24 +114,30 @@ def register():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == 'POST':
+        try:
+            remember = request.form["remember"]
+            remember = True
+        except:
+            remember = False
         user = User.query.filter_by(login=request.form["login"]).first()
         if user and bcrypt.check_password_hash(user.password, request.form["password"]):
-            if request.form["remember"] == "on":
-                login_user(user, remember=True)
-            else:
-                login_user(user)
+            login_user(user, remember=remember)
             return redirect("/")
     return render_template("login.html")
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect("/")
 
 
 @app.route("/cub", methods=["POST", "GET"])
+@login_required
 def cub():
+    if current_user.role == "admin":
+        return redirect("/panel")
     if request.method == 'POST':
         user = User.query.get(request.form["user_id"])
         if user and bcrypt.check_password_hash(user.password, request.form["old_password"]):
@@ -125,6 +146,30 @@ def cub():
             flash("Пароль успешно изменён!")
         return redirect("/")
     return render_template("cub.html")
+
+
+@app.route("/order", methods=["POST", "GET"])
+@login_required
+def order():
+    if current_user.role:
+        return redirect("/")
+    prod_id = request.args["id"]
+    if prod_id.isdigit():
+        prod = Prod.query.get(prod_id)
+        if prod:
+            if request.method == "POST":
+                try:
+                    order = Order(user_phone_number=request.form["phone"],
+                                  user_email=request.form["email"],
+                                  user_id=current_user.id,
+                                  prod_id=prod_id)
+                    db.session.add(order)
+                    db.session.commit()
+                    return redirect("/")
+                except:
+                    return "Ошибка создания азказа"
+            return render_template("order.html", prod=prod)
+    return "404"
 
 
 @app.route("/product")
@@ -138,7 +183,10 @@ def product():
 
 
 @app.route("/panel", methods=["POST", "GET"])
+@login_required
 def panel():
+    if not current_user.role:
+        return redirect("/")
     if request.method == "POST":
         if request.form["button"] == "create_product":
             file = request.files['image']

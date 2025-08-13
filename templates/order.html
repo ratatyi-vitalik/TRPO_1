@@ -28,23 +28,18 @@
     <div class="container" style="display: grid; place-items: center; min-height: 830px;">
         <div class="create-product-container" style="max-height: 450px;">
             <div class="create-product-container-1">
-                <p class="text">Авторизация</p>
+                <p class="text">Товар: {{ prod.model }}</p>
+                <p class="text">Цена: {{ prod.price }}</p>
                     <form class="form-1" name="form" method="post">
                         <div class="container-input">
-                            <label for="login">Логин</label>
-                            <input type="text" id="login" name="login" class="input" required autocomplete="off">
+                            <label for="phone">Телефон для связи</label>
+                            <input type="text" id="phone" name="phone" class="input" required autocomplete="off">
                         </div>
                         <div class="container-input">
-                            <label for="password">Пароль</label>
-                            <input type="password" id="password" name="password" class="input" required autocomplete="off">
+                            <label for="email">Электронная почта</label>
+                            <input type="text" id="email" name="email" class="input" required autocomplete="off">
                         </div>
-                        <div style="width: 500px; justify-items: center; display: grid;">
-                        <label for="remember">
-                            <input style="width: 20px; height: 20px;" type="checkbox" id="remember" name="remember">
-                            Запомнить меня
-                        </label>
-                        </div>
-                        <button type="submit">Войти</button>
+                        <button type="submit">Заказать</button>
                     </form>
                 </div>
             </div>
