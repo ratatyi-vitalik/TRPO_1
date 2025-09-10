@@ -77,13 +77,21 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_phone_number = db.Column(db.String(20), nullable=False)
     user_email = db.Column(db.String(20), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="не принят")
+    status = db.Column(db.String(20), nullable=False, default="на рассмотрении")
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='orders')
 
     prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
     prod = db.relationship('Prod', backref='orders')
+
+
+class Sale(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Integer, nullable=False)
+
+    prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
+    prod = db.relationship('Prod', backref='sale')
 
 
 @login_manager.user_loader
@@ -116,13 +124,13 @@ def login():
     if request.method == 'POST':
         try:
             remember = request.form["remember"]
-            remember = True
         except:
             remember = False
         user = User.query.filter_by(login=request.form["login"]).first()
         if user and bcrypt.check_password_hash(user.password, request.form["password"]):
+            next_page = request.args["next"]
             login_user(user, remember=remember)
-            return redirect("/")
+            return redirect(next_page)
     return render_template("login.html")
 
 
@@ -136,8 +144,6 @@ def logout():
 @app.route("/cub", methods=["POST", "GET"])
 @login_required
 def cub():
-    if current_user.role == "admin":
-        return redirect("/panel")
     if request.method == 'POST':
         user = User.query.get(request.form["user_id"])
         if user and bcrypt.check_password_hash(user.password, request.form["old_password"]):
@@ -182,9 +188,67 @@ def product():
     return "404"
 
 
-@app.route("/panel", methods=["POST", "GET"])
+@app.route("/panel/orders", methods=["POST", "GET"])
 @login_required
-def panel():
+def orders():
+    if not current_user.role:
+        return redirect("/")
+    if request.method == "POST":
+        if request.form["accept"][0] == "1":
+            try:
+                order = Order.query.get(request.form["accept"][1:])
+                order.status = "принят"
+                db.session.commit()
+            except Exception as e:
+                print(e)
+        else:
+            try:
+                order = Order.query.get(request.form["accept"][1:])
+                order.status = "отказано"
+                db.session.commit()
+            except Exception as e:
+                print(e)
+        return redirect("/panel/orders")
+    orders = Order.query.all()
+    return render_template("orders.html", orders=orders)
+
+
+@app.route("/panel/sales", methods=["POST", "GET"])
+@login_required
+def sales():
+    if not current_user.role:
+        return redirect("/")
+    if request.method == "POST":
+        if request.form["button"][0:6] == "create":
+            if int(request.form["amount"]) > 80:
+                flash('Вы долбаёб!', 'success')
+                return redirect("/panel/sales")
+            sale = Sale(amount=request.form["amount"], prod=Prod.query.get(request.form["product"]), prod_id=request.form["product"])
+            try:
+                new_price = round(sale.prod.price * (1 - int(sale.amount) / 100), 2)
+                sale.prod.price = new_price
+                db.session.add(sale)
+                db.session.commit()
+            except Exception as e:
+                print(e)
+        if request.form["button"][0:6] == "delete":
+            sale = Sale.query.get([request.form["button"][6:]])
+            try:
+                new_price = round(sale.prod.price / (1 - int(sale.amount)/100), 2)
+                sale.prod.price = new_price
+                db.session.delete(sale)
+                db.session.commit()
+            except Exception as e:
+                print(e)
+        return redirect("/panel/sales")
+    prods = Prod.query.all()
+    sales = Sale.query.all()
+    return render_template("sales.html", prods=prods, sales=sales)
+
+
+@app.route("/panel/products", methods=["POST", "GET"])
+@login_required
+def products():
     if not current_user.role:
         return redirect("/")
     if request.method == "POST":
@@ -241,7 +305,7 @@ def panel():
             try:
                 db.session.add(prod)
                 db.session.commit()
-                return redirect("/panel")
+                return redirect("/panel/products")
             except:
                 return "Ошибка"
         elif request.form["button"] == "delete":
@@ -249,12 +313,20 @@ def panel():
             try:
                 db.session.delete(prod)
                 db.session.commit()
-                return redirect("/panel")
+                return redirect("/panel/products")
             except:
                 return "Ошибка удаления из базы данных"
     else:
         prods = Prod.query.all()
-        return render_template("panel.html", prods=prods)
+        return render_template("products.html", prods=prods)
+
+
+@app.route("/panel")
+@login_required
+def panel():
+    if not current_user.role:
+        return redirect("/")
+    return render_template("panel.html")
 
 
 if __name__ == "__main__":

@@ -19,8 +19,10 @@
       <div class="head">
         <a class="logo" href="/">Xolodinik.BY</a>
         <p class="logo-text">Интернет магазин<br>холодильников</p>
-        {% if current_user.is_active %}
+        {% if current_user.is_active and not current_user.role == "admin" %}
           <a href="/cub" style="margin-right: 20px !important;" class="btn btn-2">Личный кабинет</a>
+        {% elif current_user.role == "admin" %}
+          <a href="/panel" style="margin-right: 20px !important;" class="btn btn-2">Админ панель</a>
         {% else %}
           <a href="/register" class="btn btn-1">Регистрация</a>
           <a href="/login" class="btn btn-2">Войти</a>

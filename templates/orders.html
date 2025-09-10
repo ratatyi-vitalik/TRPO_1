@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Админ панель</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='panel.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='un.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cub.css') }}" media="screen">
+    <link id="u-theme-google-font" rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Админ панель">
+</head>
+
+<body>
+
+<header>
+    <div class="head">
+        <a class="logo" href="/">Xolodinik.BY</a>
+        <p class="logo-text">Интернет магазин<br>холодильников</p>
+        <div class="header-div" style="display: flex; justify-content: center; padding-left: 395px;">
+            <a href="/panel/products" class="btn btn-2" style="margin: 0 0 0 0 !important">Товары</a>
+            <a href="/panel/orders" class="btn btn-2" style="margin: 0 0 0 10px !important">Список заказов</a>
+            <a href="/panel/sales" class="btn btn-2" style="margin: 0 0 0 10px !important">Создание акций</a>
+        </div>
+        <a href="/logout" class="btn btn-2" style="margin-right: 30px !important;">Выйти из аккаунта</a>
+    </div>
+</header>
+
+<section>
+
+    <div class="container" style="display: flex; justify-content: center; align-items: flex-start; min-height: 830px;">
+        <div class="create-product-container" style="width: 900px;">
+            <div class="create-product-container-1">
+                <p class="text">Список заказов на рассмотрении</p>
+                <div class="order border-1" style="width: auto !important;">
+                    {% for order in orders %}
+                    {% if order.status == "на рассмотрении" %}
+                    <div class="order-cont-1">
+                        <p class="text-1">{{ order.prod.model }}</p>
+                        <p class="text-2">Дата </p>
+                        <p class="text-1">Цена: {{ order.prod.price }}</p>
+                        <p class="text-1">Номер телефона заказчика: {{ order.user_phone_number }}</p>
+                        <p class="text-1">Электронная почта заказчика: {{ order.user_email }}</p>
+                        <form name="form" method="post">
+                            <button name="accept" value="1{{ order.id }}" style="margin: 10px 15px 10px 15px; width: 800px; background-color: #04af04 !important;">
+                                Принять
+                            </button>
+                            <button name="accept" value="0{{ order.id }}" style="margin: 10px 15px 10px 15px; width: 800px; background-color: #ff0404 !important;">
+                                Отказать
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="create-product-container" style="width: 900px;">
+            <div class="create-product-container-1">
+                <p class="text">Список принятых заказов</p>
+                <div class="order border-1" style="width: auto !important;">
+                    {% for order in orders %}
+                    {% if order.status == "принят" %}
+                    <div class="order-cont-1">
+                        <p class="text-1">{{ order.prod.model }}</p>
+                        <p class="text-2">Дата </p>
+                        <p class="text-1">Цена: {{ order.prod.price }}</p>
+                        <p class="text-1">Номер телефона заказчика: {{ order.user_phone_number }}</p>
+                        <p class="text-1">Электронная почта заказчика: {{ order.user_email }}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<footer></footer>
+
+</body>
+</html>
