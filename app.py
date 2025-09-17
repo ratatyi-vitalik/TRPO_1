@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, UserMixin, logout_user, login_required, current_user
+from datetime import date
 import os
 
 app = Flask(__name__)
@@ -64,6 +65,8 @@ class Prod(db.Model):
     description = db.Column(db.String(200), nullable=False)
     image_path = db.Column(db.String(50), nullable=False, unique=True)
 
+    reviews = db.relationship('Review', back_populates='prod')
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +74,8 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(13), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(20))
+
+    reviews = db.relationship('Review', back_populates='user')
 
 
 class Order(db.Model):
@@ -94,6 +99,19 @@ class Sale(db.Model):
     prod = db.relationship('Prod', backref='sale')
 
 
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(10), nullable=False)
+    grade = db.Column(db.Integer, nullable=False, default=1)
+    text = db.Column(db.String(500), default="")
+
+    prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
+    prod = db.relationship('Prod', back_populates='reviews')
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', back_populates='reviews')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -102,6 +120,13 @@ def load_user(user_id):
 @app.route("/")
 def index():
     prods = Prod.query.all()
+    if request.args:
+        if request.args["sort"] == "cheap":
+            prods.sort(key=lambda prod: prod.price)
+            return render_template("index.html", prods=prods)
+        elif request.args["sort"] == "expensive":
+            prods.sort(key=lambda prod: prod.price, reverse=True)
+            return render_template("index.html", prods=prods)
     return render_template("index.html", prods=prods)
 
 
@@ -128,9 +153,13 @@ def login():
             remember = False
         user = User.query.filter_by(login=request.form["login"]).first()
         if user and bcrypt.check_password_hash(user.password, request.form["password"]):
-            next_page = request.args["next"]
-            login_user(user, remember=remember)
-            return redirect(next_page)
+            try:
+                next_page = request.args["next"]
+                login_user(user, remember=remember)
+                return redirect(next_page)
+            except:
+                login_user(user, remember=remember)
+                return redirect("/")
     return render_template("login.html")
 
 
@@ -178,13 +207,29 @@ def order():
     return "404"
 
 
-@app.route("/product")
+@app.route("/product", methods=["POST", "GET"])
 def product():
     prod_id = request.args["id"]
     if prod_id.isdigit():
         prod = Prod.query.get(prod_id)
         if prod:
-            return render_template("product.html", prod=prod)
+            if request.method == "POST":
+                review = Review(date=date.today(), grade=request.form["rating"], text=request.form["review"], prod_id=prod_id,
+                                prod=Prod.query.get(prod_id), user_id=current_user.id, user=User.query.get(current_user.id))
+                try:
+                    db.session.add(review)
+                    db.session.commit()
+                    return redirect(f"/product?id={prod_id}")
+                except Exception as e:
+                    print(e)
+                    return redirect(f"/product?id={prod_id}")
+            reviews = Review.query.all()
+            page = 1
+            max_page = int(len(reviews)/10+0.9)
+            if "page" in request.args:
+                page = int(request.args["page"])
+            reviews = reviews[(page-1)*10:(page-1)*10+10]
+            return render_template("product.html", prod=prod, reviews=reviews, page=page, max_page=max_page)
     return "404"
 
 
@@ -221,7 +266,7 @@ def sales():
     if request.method == "POST":
         if request.form["button"][0:6] == "create":
             if int(request.form["amount"]) > 80:
-                flash('Вы долбаёб!', 'success')
+                flash('Скидка не может быть больше 80%!', 'success')
                 return redirect("/panel/sales")
             sale = Sale(amount=request.form["amount"], prod=Prod.query.get(request.form["product"]), prod_id=request.form["product"])
             try:
@@ -306,7 +351,8 @@ def products():
                 db.session.add(prod)
                 db.session.commit()
                 return redirect("/panel/products")
-            except:
+            except Exception as e:
+                print(e)
                 return "Ошибка"
         elif request.form["button"] == "delete":
             prod = Prod.query.get(request.form["product"])

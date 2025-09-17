@@ -2,7 +2,9 @@ header .head {
     box-sizing: border-box;
     position: relative;
     margin: 0 auto;
-    min-height: 109px;
+    min-height: 90px;
+    border-width: 1px;
+    border-color: #858e99;
 }
 
 .margin-0 {
@@ -10,14 +12,14 @@ header .head {
 }
 
 header .btn-1 {
-    margin: -58px 16px 0 auto !important;
+    margin: -40px 16px 0 auto !important;
     padding: 8px 32px 8px 31px !important;
 }
 
 header .btn-2 {
     color: #ffffff !important;
     border-color: transparent !important;
-    margin: -40px 199px 0 auto !important;
+    margin: -50px 199px 0 auto !important;
     padding: 9px 33px 9px 32px !important;
     border-width: 0 !important;
     background-color: #77aad9 !important;
@@ -32,11 +34,12 @@ section {
 
 header {
     margin: 0 10px;
-    min-height: 109px;
+    min-height: 90px;
     box-sizing: border-box;
-    display: block;
     position: relative;
     unicode-bidi: isolate;
+    border-width: 1px !important;
+    border-color: #858e99;
 }
 
 footer {

@@ -24,8 +24,8 @@
         {% elif current_user.role == "admin" %}
           <a href="/panel" style="margin-right: 20px !important;" class="btn btn-2">Админ панель</a>
         {% else %}
-          <a href="/register" class="btn btn-1">Регистрация</a>
           <a href="/login" class="btn btn-2">Войти</a>
+          <a href="/register" class="btn btn-1" style="font-size: 0.9375rem !important;">Регистрация</a>
         {% endif %}
       </div>
   </header>
@@ -86,7 +86,7 @@
                 </div>
                 <hr>
                 <div class="text-2" style="color: #111111; font-size: 1.5rem;">Гарантия:</div>
-                <div class="text-2">36 месяцев</div>
+                <div class="text-2">{{ prod.guaranty }}</div>
             </div>
         </div>
         <hr style="margin-bottom: 30px;">
@@ -316,11 +316,43 @@
         <div class="review-container" style="max-width: 100%;">
             <div>
                 <div>
+                    {% for review in reviews %}
                     <div class="review">
-                        <p class="review-text-1">Виталик</p>
+                        <p class="review-text-1">{{ review.user.login }}</p>
                         <div class="rating-container">
+                            {% if review.grade == 1 %}
                             <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 39px; color: #858e99 !important;">
                                 <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 71px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 103px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 135px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            {% elif review.grade == 2 %}
+                            <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
                                     <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
 	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
 	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
@@ -328,43 +360,182 @@
                             </div>
                             <div class="review-star" style="margin-left: 39px;">
                                 <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
-                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
-	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
-	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                    <use href="#svg1"/>
                                 </svg>
                             </div>
-                            <div class="review-star" style="margin-left: 71px;">
+                            <div class="review-star" style="margin-left: 71px;  color: #858e99 !important;">
                                 <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
-                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
-	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
-	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                    <use href="#svg1"/>
                                 </svg>
                             </div>
-                            <div class="review-star" style="margin-left: 103px;">
+                            <div class="review-star" style="margin-left: 103px;  color: #858e99 !important;">
                                 <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
-                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
-	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
-	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                    <use href="#svg1"/>
                                 </svg>
                             </div>
                             <div class="review-star" style="margin-left: 135px; color: #858e99 !important;">
                                 <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            {% elif review.grade == 3 %}
+                            <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
                                     <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
 	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
 	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
                                 </svg>
                             </div>
+                            <div class="review-star" style="margin-left: 39px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 71px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 103px;  color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 135px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            {% elif review.grade == 4 %}
+                            <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 39px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 71px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 103px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 135px; color: #858e99 !important;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            {% elif review.grade == 5 %}
+                            <div class="review-star" style="margin-top: 0;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 39px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 71px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 103px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            <div class="review-star" style="margin-left: 135px;">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </div>
+                            {% endif %}
                         </div>
-                        <p class="review-text">Вообще крпзлуклщрбукзъщпубьлпзщвкпрьукз=щпукеьлзрщукьуцз=щаубькрзщук</p>
-                        <p class="review-data">29.01.1999</p>
+                        <p class="review-text">{{ review.text }}</p>
+                        <p class="review-data">{{ review.date }}</p>
                     </div>
+                    {% endfor %}
                 </div>
+                {% if max_page > 1 %}
+                <div class="review-pages-cont">
+                    {% if page != 1 %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page=1"><-</a>
+                    {% endif %}
+                    {% if page - 2 >= 1 %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page - 2 }}">{{ page - 2 }}</a>
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page - 1 }}">{{ page - 1 }}</a>
+                    {% elif page - 1 >= 1 %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page - 1 }}">{{ page - 1 }}</a>
+                    {% endif %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page }}">{{ page }}</a>
+                    {% if page + 2 <= max_page %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page + 1 }}">{{ page + 1 }}</a>
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page + 2 }}">{{ page + 2 }}</a>
+                    {% elif page + 1 <= max_page %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ page + 1 }}">{{ page + 1 }}</a>
+                    {% endif %}
+                    <a class="review-pages" href="/product?id={{ prod.id }}&page={{ max_page }}">-></a>
+                </div>
+                {% endif %}
+                {% if current_user.is_active and not current_user.role == "admin" %}
                 <div class="review-add-container">
                     <form name="form" method="post">
-                            <input id="review" name="review" required autocomplete="off">
+                        <div class="rating-area">
+                            <input type="radio" id="star-5" name="rating" value="5">
+                            <label for="star-5">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" id="svg1"
+                                     style="fill: currentColor;">
+                                    <path d="M90.5,6.5l15.7,31.9c1.7,3.5,5,5.9,8.8,6.4l35,5.2c9.6,1.4,13.4,13.2,6.5,20l-25.3,24.8c-2.8,2.7-4,6.6-3.4,10.4l6,35
+	c1.6,9.6-8.4,16.9-16.9,12.4L85.5,136c-3.4-1.8-7.5-1.8-10.9,0l-31.4,16.6c-8.6,4.5-18.6-2.8-16.9-12.4l6-35
+	c0.7-3.8-0.6-7.7-3.4-10.4L3.5,70c-6.9-6.8-3.1-18.6,6.5-20l35-5.1c3.8-0.6,7.1-3,8.8-6.4L69.5,6.6C73.8-2.2,86.2-2.2,90.5,6.5z"></path>
+                                </svg>
+                            </label>
+                            <input type="radio" id="star-4" name="rating" value="4">
+                            <label for="star-4">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </label>
+                            <input type="radio" id="star-3" name="rating" value="3">
+                            <label for="star-3">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </label>
+                            <input type="radio" id="star-2" name="rating" value="2">
+                            <label for="star-2">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </label>
+                            <input type="radio" id="star-1" name="rating" value="1" checked="checked">
+                            <label for="star-1">
+                                <svg preserveAspectRatio="none" viewBox="0 0 160 154" style="fill: currentColor;">
+                                    <use href="#svg1"/>
+                                </svg>
+                            </label>
+                        </div>
+                        <input id="review" name="review" required autocomplete="off">
                         <button class="btn-submit" type="submit">Добавить отзыв</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

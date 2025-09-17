@@ -22,8 +22,8 @@
         {% elif current_user.role == "admin" %}
           <a href="/panel" style="margin-right: 20px !important;" class="btn btn-2">Админ панель</a>
         {% else %}
-          <a href="/register" class="btn btn-1">Регистрация</a>
           <a href="/login" class="btn btn-2">Войти</a>
+          <a href="/register" class="btn btn-1">Регистрация</a>
         {% endif %}
       </div>
   </header>
@@ -32,8 +32,8 @@
     <section>
       <div class="container">
         <a href="" class="btn btn-1">Фильтры </a>
-        <a href="" class="btn btn-2">Сначала дешёвые </a>
-        <a href="" class="btn btn-3">Сначала дорогие</a>
+        <a href="/?sort=cheap" class="btn btn-2">Сначала дешёвые </a>
+        <a href="/?sort=expensive" class="btn btn-3">Сначала дорогие</a>
           <div class="catalog">
               {% for prod in prods%}
             <div class="container-product-1">
@@ -50,8 +50,8 @@
                 <a class="btn btn-4" href="/product?id={{ prod.id }}">Подробнее</a>
                 <a class="btn btn-4" href="/order?id={{ prod.id }}">Купить </a>
               </div>
-            </div>
               {% endfor %}
+            </div>
         </div>
     </section>
     
