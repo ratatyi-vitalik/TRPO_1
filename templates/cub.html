@@ -22,15 +22,14 @@
       </div>
   </header>
 
-  <section style="display: grid; place-items: center; min-height: 830px;">
+  <section style="display: grid; place-items: center; min-height: 850px;">
       <div>
         <div class="border-1">
           <div class="user-data">
-            <p class="text-1">Ваш логин</p>
-            <div class="login-cont">
-                <p class="text-1">{{ current_user.login }}</p>
-            </div>
-              <form class="form-1" name="form" method="post" style="padding: 0;">
+              <p class="text-1" style="text-align: center; width: 530px;">Ваши данные</p>
+            <p class="text-1">Ваш логин: {{ current_user.login }}</p>
+              <p class="text-1">Ваш номер телефона: {{ current_user.phone_number }}</p>
+              <form class="form-1" name="form" method="post" style="margin-top: 10px; padding: 0;">
                         <div class="container-input">
                             <label for="old_password">Старый пароль</label>
                             <input type="password" id="old_password" name="old_password" class="input" required autocomplete="off">

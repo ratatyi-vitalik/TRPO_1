@@ -21,18 +21,18 @@
     <div class="head">
         <a class="logo" href="/">Xolodinik.BY</a>
         <p class="logo-text">Интернет магазин<br>холодильников</p>
-        <div class="header-div" style="display: flex; justify-content: center; padding-left: 395px;">
+        <div class="header-div" style="display: flex; justify-content: center; padding-left: 395px; padding-right: 250px; margin-top: -50px;">
             <a href="/panel/products" class="btn btn-2" style="margin: 0 0 0 0 !important">Товары</a>
             <a href="/panel/orders" class="btn btn-2" style="margin: 0 0 0 10px !important">Список заказов</a>
             <a href="/panel/sales" class="btn btn-2" style="margin: 0 0 0 10px !important">Создание акций</a>
         </div>
-        <a href="/logout" class="btn btn-2" style="margin-right: 30px !important;">Выйти из аккаунта</a>
+        <a href="/logout" class="btn btn-2" style="margin-right: 30px !important; margin-top: -39px !important;">Выйти из аккаунта</a>
     </div>
 </header>
 
 <section>
 
-    <div class="container" style="display: flex; justify-content: center; align-items: flex-start; min-height: 830px;">
+    <div class="container" style="display: flex; justify-content: center; align-items: flex-start; min-height: 850px;">
         <div class="create-product-container" style="width: 900px;">
             <div class="create-product-container-1">
                 <p class="text">Список заказов на рассмотрении</p>
@@ -41,7 +41,7 @@
                     {% if order.status == "на рассмотрении" %}
                     <div class="order-cont-1">
                         <p class="text-1">{{ order.prod.model }}</p>
-                        <p class="text-2">Дата </p>
+                        <p class="text-2">{{ order.date }}</p>
                         <p class="text-1">Цена: {{ order.prod.price }}</p>
                         <p class="text-1">Номер телефона заказчика: {{ order.user_phone_number }}</p>
                         <p class="text-1">Электронная почта заказчика: {{ order.user_email }}</p>

@@ -83,6 +83,7 @@ class Order(db.Model):
     user_phone_number = db.Column(db.String(20), nullable=False)
     user_email = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="на рассмотрении")
+    date = db.Column(db.String(10), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='orders')
@@ -94,6 +95,8 @@ class Order(db.Model):
 class Sale(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.String(10), nullable=False)
+    end_date = db.Column(db.String(10), nullable=False)
 
     prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
     prod = db.relationship('Prod', backref='sale')
@@ -139,7 +142,8 @@ def register():
             db.session.add(user)
             db.session.commit()
             return redirect("/login")
-        except:
+        except Exception as e:
+            print(e)
             return "Ошибка"
     return render_template('register.html')
 
@@ -194,8 +198,10 @@ def order():
         if prod:
             if request.method == "POST":
                 try:
+                    dat = date.today()
                     order = Order(user_phone_number=request.form["phone"],
                                   user_email=request.form["email"],
+                                  date=str(dat.day) + "." + str(dat.month) + "." + str(dat.year),
                                   user_id=current_user.id,
                                   prod_id=prod_id)
                     db.session.add(order)
@@ -214,8 +220,14 @@ def product():
         prod = Prod.query.get(prod_id)
         if prod:
             if request.method == "POST":
-                review = Review(date=date.today(), grade=request.form["rating"], text=request.form["review"], prod_id=prod_id,
+                dat = date.today()
+                review = Review(date=str(dat.day) + "." + str(dat.month) + "." + str(dat.year), grade=request.form["rating"], text=request.form["review"], prod_id=prod_id,
                                 prod=Prod.query.get(prod_id), user_id=current_user.id, user=User.query.get(current_user.id))
+                prod_rating = 0.0
+                for i in prod.reviews:
+                    prod_rating += i.grade
+                if len(prod.reviews) != 0:
+                    prod.rating = round(prod_rating / len(prod.reviews), 2)
                 try:
                     db.session.add(review)
                     db.session.commit()
