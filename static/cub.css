@@ -1,3 +1,25 @@
+.rating-container {
+    margin-top: 7px;
+    max-height: 30px;
+    font-size: 1.5rem;
+    stroke: none;
+    box-sizing: border-box;
+    display: grid;
+    position: relative;
+    width: 167px;
+    text-align: left;
+}
+
+.review-star {
+    box-sizing: border-box;
+    position: relative;
+    color: #478ac9 !important;
+    width: 25px;
+    height: 25px;
+    margin: -26px 0 auto 7px;
+    border: none !important;
+}
+
 .border-1 {
     border-radius: 10px;
     box-sizing: border-box;
@@ -84,7 +106,7 @@
     display: flex;
     position: relative;
     text-align: left;
-    min-height: 125px;
+    min-height: 100px;
     width: 530px;
     height: auto;
     margin: 10px auto 20px;

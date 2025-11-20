@@ -65,6 +65,8 @@ class Prod(db.Model):
     description = db.Column(db.String(200), nullable=False)
     image_path = db.Column(db.String(50), nullable=False, unique=True)
 
+    orders = db.relationship('Order', back_populates='prod')
+
     reviews = db.relationship('Review', back_populates='prod')
 
 
@@ -74,6 +76,8 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(13), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(20))
+
+    orders = db.relationship('Order', back_populates='user')
 
     reviews = db.relationship('Review', back_populates='user')
 
@@ -85,11 +89,11 @@ class Order(db.Model):
     status = db.Column(db.String(20), nullable=False, default="на рассмотрении")
     date = db.Column(db.String(10), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', backref='orders')
-
     prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
-    prod = db.relationship('Prod', backref='orders')
+    prod = db.relationship('Prod', back_populates='orders')
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', back_populates='orders')
 
 
 class Sale(db.Model):
@@ -108,6 +112,9 @@ class Review(db.Model):
     grade = db.Column(db.Integer, nullable=False, default=1)
     text = db.Column(db.String(500), default="")
 
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    order = db.relationship('Order', backref='order')
+
     prod_id = db.Column(db.Integer, db.ForeignKey('prod.id'))
     prod = db.relationship('Prod', back_populates='reviews')
 
@@ -120,17 +127,50 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def index():
     prods = Prod.query.all()
-    if request.args:
+    producers = []
+    for prod in prods:
+        if prod.producer not in producers:
+            producers.append(prod.producer)
+    if request.method == "POST":
+        if request.form["button"] == "search":
+            new_prods = []
+            search = request.form["search"]
+            for prod in prods:
+                if search in prod.model:
+                    new_prods.append(prod)
+            return render_template("index.html", prods=new_prods, producers=producers)
+        if request.form["button"] == "filters":
+            picked_producer = ""
+            if "producer" in request.form:
+                picked_producer = request.form["producer"]
+                for prod in prods:
+                    if prod.producer != picked_producer:
+                        prods.remove(prod)
+            min_price, max_price = 0, max(prods, key=lambda prod: prod.price).price
+            f1, f2 = False, False
+            if request.form["max_price"]:
+                max_price = request.form["max_price"]
+                f1 = True
+            if request.form["min_price"]:
+                min_price = request.form["min_price"]
+                f2 = True
+            for prod in prods:
+                if not int(min_price) <= prod.price <= int(max_price):
+                    prods.remove(prod)
+            return render_template("index.html", prods=prods, producers=producers, picked_producer=picked_producer, f1=f1, f2=f2, min_price=min_price, max_price=max_price)
+        if request.form["button"] == "drop":
+            render_template("index.html", prods=prods, producers=producers)
+    if "sort" in request.args:
         if request.args["sort"] == "cheap":
             prods.sort(key=lambda prod: prod.price)
-            return render_template("index.html", prods=prods)
+            return render_template("index.html", prods=prods, producers=producers)
         elif request.args["sort"] == "expensive":
             prods.sort(key=lambda prod: prod.price, reverse=True)
-            return render_template("index.html", prods=prods)
-    return render_template("index.html", prods=prods)
+            return render_template("index.html", prods=prods, producers=producers)
+    return render_template("index.html", prods=prods, producers=producers)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -184,6 +224,8 @@ def cub():
             db.session.commit()
             flash("Пароль успешно изменён!")
         return redirect("/")
+    if current_user.orders:
+        return render_template("cub.html", orders=current_user.orders)
     return render_template("cub.html")
 
 
@@ -221,8 +263,10 @@ def product():
         if prod:
             if request.method == "POST":
                 dat = date.today()
-                review = Review(date=str(dat.day) + "." + str(dat.month) + "." + str(dat.year), grade=request.form["rating"], text=request.form["review"], prod_id=prod_id,
-                                prod=Prod.query.get(prod_id), user_id=current_user.id, user=User.query.get(current_user.id))
+                review = Review(date=str(dat.day) + "." + str(dat.month) + "." + str(dat.year),
+                                grade=request.form["rating"], text=request.form["review"], prod_id=prod_id,
+                                prod=Prod.query.get(prod_id), user_id=current_user.id,
+                                user=User.query.get(current_user.id))
                 prod_rating = 0.0
                 for i in prod.reviews:
                     prod_rating += i.grade
@@ -237,11 +281,16 @@ def product():
                     return redirect(f"/product?id={prod_id}")
             reviews = Review.query.all()
             page = 1
-            max_page = int(len(reviews)/10+0.9)
+            max_page = int(len(reviews) / 10 + 0.9)
             if "page" in request.args:
                 page = int(request.args["page"])
-            reviews = reviews[(page-1)*10:(page-1)*10+10]
-            return render_template("product.html", prod=prod, reviews=reviews, page=page, max_page=max_page)
+            reviews = reviews[(page - 1) * 10:(page - 1) * 10 + 10]
+            flag = False
+            if current_user.is_active:
+                for order in current_user.orders:
+                    if order.user.id == current_user.id and order.status == "принят":
+                        flag = True
+            return render_template("product.html", prod=prod, reviews=reviews, page=page, max_page=max_page, flag=flag)
     return "404"
 
 
@@ -280,7 +329,8 @@ def sales():
             if int(request.form["amount"]) > 80:
                 flash('Скидка не может быть больше 80%!', 'success')
                 return redirect("/panel/sales")
-            sale = Sale(amount=request.form["amount"], prod=Prod.query.get(request.form["product"]), prod_id=request.form["product"])
+            sale = Sale(amount=request.form["amount"], prod=Prod.query.get(request.form["product"]),
+                        prod_id=request.form["product"])
             try:
                 new_price = round(sale.prod.price * (1 - int(sale.amount) / 100), 2)
                 sale.prod.price = new_price
@@ -291,7 +341,7 @@ def sales():
         if request.form["button"][0:6] == "delete":
             sale = Sale.query.get([request.form["button"][6:]])
             try:
-                new_price = round(sale.prod.price / (1 - int(sale.amount)/100), 2)
+                new_price = round(sale.prod.price / (1 - int(sale.amount) / 100), 2)
                 sale.prod.price = new_price
                 db.session.delete(sale)
                 db.session.commit()
@@ -357,7 +407,7 @@ def products():
                         weight_without=request.form["weight-without"],
                         weight_with=request.form["weight-with"],
                         description=request.form["description"],
-                        image_path="/uploads/"+filename
+                        image_path="/uploads/" + filename
                         )
             try:
                 db.session.add(prod)
