@@ -26,7 +26,18 @@
 
 <section>
 
-    <div class="container" style="display: grid; place-items: center; min-height: 850px;">
+    <div class="container" style="display: grid; place-items: center; min-height: 850px; align-content: center;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        {% if category == "error" %}
+        <div class="error-message">
+            <strong>Ошибка:</strong> {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="create-product-container" style="max-height: auto;">
             <div class="create-product-container-1">
                 <p class="text">Регистрация</p>

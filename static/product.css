@@ -308,6 +308,8 @@ hr {
 }
 
 .product-props-group {
+    display: flex;
+    flex-direction: column;
     font-size: 1.5rem;
     box-sizing: border-box;
     max-width: 1050px;

@@ -495,7 +495,7 @@
                     {% endif %}
                 </div>
                 {% endif %}
-                {% if current_user.is_active and not current_user.role == "admin" and flag%}
+                {% if not current_user.role == "admin" and flag%}
                 <div class="review-add-container">
                     <form name="form" method="post">
                         <div class="rating-area">

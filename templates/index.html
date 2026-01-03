@@ -63,10 +63,9 @@
     </div>
     <section>
         <div class="container">
-            <a href="" class="btn btn-1">Фильтры </a>
             <a href="/?sort=cheap" class="btn btn-2">Сначала дешёвые </a>
             <a href="/?sort=expensive" class="btn btn-3">Сначала дорогие</a>
-            <div class="catalog">
+            <div class="catalog" style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 520px); margin-bottom: 0;">
                 {% for prod in prods%}
                 <div class="container-product-1">
                     <p class="rating-text">{{ prod.rating }}</p>

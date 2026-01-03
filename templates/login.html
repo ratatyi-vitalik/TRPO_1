@@ -25,7 +25,18 @@
 
 <section>
 
-    <div class="container" style="display: grid; place-items: center; min-height: 850px;">
+    <div class="container" style="display: grid; place-items: center; min-height: 850px; align-content: center;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        {% if category == "error" %}
+        <div class="error-message">
+            <strong>Ошибка:</strong> {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="create-product-container" style="max-height: 450px;">
             <div class="create-product-container-1">
                 <p class="text">Авторизация</p>
@@ -37,12 +48,6 @@
                         <div class="container-input">
                             <label for="password">Пароль</label>
                             <input type="password" id="password" name="password" class="input" required autocomplete="off">
-                        </div>
-                        <div style="width: 500px; justify-items: center; display: grid;">
-                        <label for="remember">
-                            <input style="width: 20px; height: 20px;" type="checkbox" id="remember" name="remember">
-                            Запомнить меня
-                        </label>
                         </div>
                         <button type="submit">Войти</button>
                     </form>

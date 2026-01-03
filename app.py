@@ -63,7 +63,7 @@ class Prod(db.Model):
     weight_with = db.Column(db.String(20), nullable=False)
     rating = db.Column(db.Float, nullable=False, default=0.0)
     description = db.Column(db.String(200), nullable=False)
-    image_path = db.Column(db.String(50), nullable=False, unique=True)
+    image_path = db.Column(db.String(50), nullable=False)
 
     orders = db.relationship('Order', back_populates='prod')
 
@@ -146,9 +146,13 @@ def index():
             picked_producer = ""
             if "producer" in request.form:
                 picked_producer = request.form["producer"]
+                removed = []
                 for prod in prods:
                     if prod.producer != picked_producer:
-                        prods.remove(prod)
+                        removed.append(prod)
+                for prod in removed:
+                    prods.remove(prod)
+                del removed
             min_price, max_price = 0, max(prods, key=lambda prod: prod.price).price
             f1, f2 = False, False
             if request.form["max_price"]:
@@ -176,6 +180,15 @@ def index():
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == 'POST':
+        login = request.form["login"]
+        if User.query.filter_by(login=login).first():
+            print(User.query.filter_by(login=login), login)
+            flash("Это имя пользователя уже занято!", "error")
+            return redirect("/register")
+        email = request.form["email"]
+        if User.query.filter_by(email=email).first():
+            flash("Этот номер телефона уже зарегистрирован!", "error")
+            return redirect("/register")
         hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
         user = User(login=request.form['login'], phone_number=request.form['phone_number'], password=hashed_password)
         try:
@@ -191,19 +204,17 @@ def register():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == 'POST':
-        try:
-            remember = request.form["remember"]
-        except:
-            remember = False
         user = User.query.filter_by(login=request.form["login"]).first()
         if user and bcrypt.check_password_hash(user.password, request.form["password"]):
             try:
                 next_page = request.args["next"]
-                login_user(user, remember=remember)
+                login_user(user)
                 return redirect(next_page)
             except:
-                login_user(user, remember=remember)
+                login_user(user)
                 return redirect("/")
+        else:
+            flash("Неверный логин или пароль!", "error")
     return render_template("login.html")
 
 
