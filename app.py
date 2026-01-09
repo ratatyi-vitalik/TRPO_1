@@ -161,9 +161,12 @@ def index():
             if request.form["min_price"]:
                 min_price = request.form["min_price"]
                 f2 = True
+            removed = []
             for prod in prods:
                 if not int(min_price) <= prod.price <= int(max_price):
-                    prods.remove(prod)
+                    removed.append(prod)
+            for i in removed:
+                prods.remove(i)
             return render_template("index.html", prods=prods, producers=producers, picked_producer=picked_producer, f1=f1, f2=f2, min_price=min_price, max_price=max_price)
         if request.form["button"] == "drop":
             render_template("index.html", prods=prods, producers=producers)
@@ -185,8 +188,8 @@ def register():
             print(User.query.filter_by(login=login), login)
             flash("Это имя пользователя уже занято!", "error")
             return redirect("/register")
-        email = request.form["email"]
-        if User.query.filter_by(email=email).first():
+        phone_number = request.form["phone_number"]
+        if User.query.filter_by(phone_number=phone_number).first():
             flash("Этот номер телефона уже зарегистрирован!", "error")
             return redirect("/register")
         hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
